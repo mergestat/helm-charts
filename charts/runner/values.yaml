@@ -1,0 +1,221 @@
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  enabled: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: runner
+  annotations: {}
+
+
+imagePullSecrets:
+# - name: "image-pull-secret"
+
+runner:
+  enabled: true
+  name: runner
+  ## runner container image
+  ##
+  image:
+    repository: quay.io/mergestat/runner
+    tag: v0.0.0
+    pullPolicy: IfNotPresent
+
+  ## runner priorityClassName
+  ##
+  priorityClassName: ""
+
+  ## Additional runner container arguments
+  ##
+  extraArgs: {}
+
+  ## Additional InitContainers to initialize the pod
+  ##
+  extraInitContainers: []
+
+  ## Additional runner container environment variable
+  ## For instance to add a http_proxy
+  ##
+  extraEnv: {}
+
+  ## Additional runner Secret mounts
+  # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
+  extraSecretMounts: []
+    # - name: secret-files
+    #   mountPath: /etc/secrets
+    #   subPath: ""
+    #   secretName: runner-secret-files
+    #   readOnly: true
+
+  ## runner Deployment Strategy type
+  # strategy:
+  #   type: Recreate
+
+  ## Node tolerations for runner scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  tolerations: []
+    # - key: "key"
+    #   operator: "Equal|Exists"
+    #   value: "value"
+    #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+
+  ## Node labels for runner pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+  ## Pod affinity
+  ##
+  affinity: {}
+
+  ## PodDisruptionBudget settings
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+  ##
+  podDisruptionBudget:
+    enabled: false
+    maxUnavailable: 1
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName:
+
+  persistentVolume:
+    ## If true, runner will create/use a Persistent Volume Claim
+    ## If false, use emptyDir
+    ##
+    enabled: true
+
+    ## runner data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    accessModes:
+      - ReadWriteOnce
+
+    ## runner data Persistent Volume Claim annotations
+    ##
+    annotations: {}
+
+    ## runner data Persistent Volume existing claim name
+    ## Requires runner.persistentVolume.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+
+    ## runner data Persistent Volume mount root path
+    ##
+    mountPath: /data
+
+    ## runner data Persistent Volume size
+    ##
+    size: 2Gi
+
+    ## runner data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+
+    ## runner data Persistent Volume Binding Mode
+    ## If defined, volumeBindingMode: <volumeBindingMode>
+    ## If undefined (the default) or set to null, no volumeBindingMode spec is
+    ##   set, choosing the default mode.
+    ##
+    # volumeBindingMode: ""
+
+    ## Subdirectory of runner data Persistent Volume to mount
+    ## Useful if the volume's root directory is not empty
+    ##
+    subPath: ""
+
+  emptyDir:
+    ## runner emptyDir volume size limit
+    ##
+    sizeLimit: ""
+
+  ## Annotations to be added to runner pods
+  ##
+  podAnnotations: {}
+
+  ## Labels to be added to runner pods
+  ##
+  podLabels: {}
+
+  ## Specify if a Pod Security Policy for node-exporter must be created
+  ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+  ##
+  podSecurityPolicy:
+    annotations: {}
+      ## Specify pod annotations
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
+      ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#sysctl
+      ##
+      # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+      # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
+      # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
+
+  replicaCount: 1
+
+  ## Annotations to be added to deployment
+  ##
+  deploymentAnnotations: {}
+
+  statefulSet:
+    ## If true, use a statefulset instead of a deployment for pod management.
+    ## This allows to scale replicas which require storage
+    ##
+    enabled: false
+
+    annotations: {}
+    labels: {}
+    podManagementPolicy: OrderedReady
+
+    ## runner headless service to use for the statefulset
+    ##
+    headless:
+      annotations: {}
+      labels: {}
+
+  ## runner resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources: {}
+    # limits:
+    #   cpu: 10m
+    #   memory: 32Mi
+    # requests:
+    #   cpu: 10m
+    #   memory: 32Mi
+
+  ## Security context to be added to runner pods
+  ##
+  securityContext:
+    runAsUser: 65534
+    runAsNonRoot: true
+    runAsGroup: 65534
+    fsGroup: 65534
+
+serviceMonitor:
+  enabled: false
+  #  namespace: monitoring
+  labels: {}
+  interval: 10s
+  scrapeTimeout: 10s
+  scheme: http
+  relabelings: []
+  targetLabels: []
+  metricRelabelings: []
+  sampleLimit: 0
+
+prometheusRule:
+  ## The rules will be processed as Helm template, allowing to set variables in them.
+  enabled: false
+  #  namespace: monitoring
+  labels: {}
+  rules: []
+
+forceNamespace: mergestat

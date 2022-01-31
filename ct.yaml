@@ -1,0 +1,9 @@
+# See https://github.com/helm/chart-testing#configuration
+remote: origin
+target-branch: main
+chart-dirs:
+  - charts
+chart-repos:
+  - mergestat=https://mergestat.github.io/helm-charts
+  - stable=https://charts.helm.sh/stable
+helm-extra-args: --timeout 600s

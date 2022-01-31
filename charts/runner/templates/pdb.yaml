@@ -1,0 +1,14 @@
+{{- if .Values.runner.podDisruptionBudget.enabled }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "runner.fullname" . }}
+{{ include "runner.namespace" . | indent 2 }}
+  labels:
+    {{- include "runner.labels" . | nindent 4 }}
+spec:
+  maxUnavailable: {{ .Values.runner.podDisruptionBudget.maxUnavailable }}
+  selector:
+    matchLabels:
+      {{- include "runner.labels" . | nindent 6 }}
+{{- end }}

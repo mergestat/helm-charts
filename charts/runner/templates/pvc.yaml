@@ -1,0 +1,33 @@
+{{- if not .Values.runner.statefulSet.enabled -}}
+{{- if and .Values.runner.enabled .Values.runner.persistentVolume.enabled -}}
+{{- if not .Values.runner.persistentVolume.existingClaim -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- if .Values.runner.persistentVolume.annotations }}
+  annotations:
+{{ toYaml .Values.runner.persistentVolume.annotations | indent 4 }}
+  {{- end }}
+  labels:
+    {{- include "runner.labels" . | nindent 4 }}
+  name: {{ template "runner.fullname" . }}
+{{ include "runner.namespace" . | indent 2 }}
+spec:
+  accessModes:
+{{ toYaml .Values.runner.persistentVolume.accessModes | indent 4 }}
+{{- if .Values.runner.persistentVolume.storageClass }}
+{{- if (eq "-" .Values.runner.persistentVolume.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.runner.persistentVolume.storageClass }}"
+{{- end }}
+{{- end }}
+{{- if .Values.runner.persistentVolume.volumeBindingMode }}
+  volumeBindingModeName: "{{ .Values.runner.persistentVolume.volumeBindingMode }}"
+{{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.runner.persistentVolume.size }}"
+{{- end -}}
+{{- end -}}
+{{- end -}}

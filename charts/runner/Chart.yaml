@@ -1,0 +1,16 @@
+apiVersion: v2
+name: runner
+version: 1.0.0
+appVersion: 1.0.0
+description: runner is a mergestat query runner for kubernetes
+home: https://www.mergestat.com/
+icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+sources:
+  - https://github.com/mergestat/runner
+maintainers:
+  - name: matoszz
+    email: manderson@mergestat.com
+  - name: patrickdevivo
+    email: patrick@mergestat.com
+engine: gotpl
+type: application

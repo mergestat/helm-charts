@@ -1,0 +1,31 @@
+{{- if and .Values.runner.enabled .Values.runner.statefulSet.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.runner.statefulSet.headless.annotations }}
+  annotations:
+{{ toYaml .Values.runner.statefulSet.headless.annotations | indent 4 }}
+{{- end }}
+  labels:
+    {{- include "runner.labels" . | nindent 4 }}
+{{- if .Values.runner.statefulSet.headless.labels }}
+{{ toYaml .Values.runner.statefulSet.headless.labels | indent 4 }}
+{{- end }}
+  name: {{ template "runner.fullname" . }}-headless
+{{ include "runner.namespace" . | indent 2 }}
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: {{ .Values.runner.statefulSet.headless.servicePort }}
+      protocol: TCP
+      targetPort: 9093
+{{- if .Values.runner.statefulSet.headless.enableMeshPeer }}
+    - name: meshpeer
+      port: 6783
+      protocol: TCP
+      targetPort: 6783
+{{- end }}
+  selector:
+    {{- include "runner.matchLabels" . | nindent 4 }}
+{{- end }}
