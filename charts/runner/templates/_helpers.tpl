@@ -2,40 +2,40 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "runner.name" -}}
+{{- define "name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "runner.chart" -}}
+{{- define "chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create unified labels for runner components
 */}}
-{{- define "runner.common.matchLabels" -}}
-app: {{ template "runner.name" . }}
+{{- define "common.matchLabels" -}}
+app: {{ template "name" . }}
 release: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "runner.common.metaLabels" -}}
-chart: {{ template "runner.chart" . }}
+{{- define "common.metaLabels" -}}
+chart: {{ template "chart" . }}
 heritage: {{ .Release.Service }}
 {{- end -}}
 
-{{- define "runner.labels" -}}
-{{ include "runner.common.matchLabels" . }}
-{{ include "runner.common.metaLabels" . }}
+{{- define "labels" -}}
+{{ include "common.matchLabels" . }}
+{{ include "common.metaLabels" . }}
 {{- end -}}
 
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
-{{- define "runner.fullname" -}}
+{{- define "fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -51,7 +51,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Return the appropriate apiVersion for deployment.
 */}}
-{{- define "runner.deployment.apiVersion" -}}
+{{- define "deployment.apiVersion" -}}
 {{- print "apps/v1" -}}
 {{- end -}}
 
@@ -70,18 +70,18 @@ Return the appropriate apiVersion for rbac.
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "runner.serviceAccountName" -}}
+{{- define "serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "runner.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Define the runner.namespace template if set with forceNamespace or .Release.Namespace is set
+Define the namespace template if set with forceNamespace or .Release.Namespace is set
 */}}
-{{- define "runner.namespace" -}}
+{{- define "namespace" -}}
 {{- if .Values.forceNamespace -}}
 {{ printf "namespace: %s" .Values.forceNamespace }}
 {{- else -}}

@@ -1,135 +1,92 @@
-{{- if and .Values.runner.enabled (not .Values.runner.statefulSet.enabled) -}}
 apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
-{{- if .Values.runner.deploymentAnnotations }}
+{{- if .Values.deploymentAnnotations }}
   annotations:
-    {{ toYaml .Values.runner.deploymentAnnotations | nindent 4 }}
+    {{ toYaml .Values.deploymentAnnotations | nindent 4 }}
 {{- end }}
   labels:
-    {{- include "runner.labels" . | nindent 4 }}
-  name: {{ template "runner.fullname" . }}
-{{ include "runner.namespace" . | indent 2 }}
+    {{- include "labels" . | nindent 4 }}
+  name: {{ template "fullname" . }}
+{{ include "namespace" . | indent 2 }}
 spec:
   selector:
     matchLabels:
-      {{- include "runner.matchLabels" . | nindent 6 }}
-  replicas: {{ .Values.runner.replicaCount }}
-  {{- if .Values.runner.strategy }}
-  strategy:
-{{ toYaml .Values.runner.strategy | trim | indent 4 }}
-    {{ if eq .Values.runner.strategy.type "Recreate" }}rollingUpdate: null{{ end }}
-{{- end }}
+      {{- include "matchLabels" . | nindent 6 }}
+  replicas: {{- default "1" .Values.replicaCount }}
   template:
     metadata:
-    {{- if .Values.runner.podAnnotations }}
+    {{- if .Values.podAnnotations }}
       annotations:
-        {{ toYaml .Values.runner.podAnnotations | nindent 8 }}
+        {{ toYaml .Values.podAnnotations | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "runner.labels" . | nindent 8 }}
-        {{- if .Values.runner.podLabels}}
-        {{ toYaml .Values.runner.podLabels | nindent 8 }}
+        {{- include "labels" . | nindent 8 }}
+        {{- if .Values.podLabels}}
+        {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end}}
     spec:
-{{- if .Values.runner.schedulerName }}
-      schedulerName: "{{ .Values.runner.schedulerName }}"
-{{- end }}
       serviceAccountName: {{ template "serviceAccountName.runner" . }}
-      {{- if .Values.runner.extraInitContainers }}
+      {{- if .Values.extraInitContainers }}
       initContainers:
-{{ toYaml .Values.runner.extraInitContainers | indent 8 }}
+{{ toYaml .Values.extraInitContainers | indent 8 }}
       {{- end }}
-{{- if .Values.runner.priorityClassName }}
-      priorityClassName: "{{ .Values.runner.priorityClassName }}"
+{{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
 {{- end }}
       containers:
-        - name: {{ template "name" . }}-{{ .Values.runner.name }}
-          image: "{{ .Values.runner.image.repository }}:{{ .Values.runner.image.tag }}"
-          imagePullPolicy: "{{ .Values.runner.image.pullPolicy }}"
+        - name: {{ template "name" . }}-{{ .Values.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          envFrom:
+            - secretRef:
+              name: runner-secret
           env:
-            {{- range $key, $value := .Values.runner.extraEnv }}
+{{- if .Values.extraEnv }}
+            {{- range $key, $value := .Values.extraEnv }}
             - name: {{ $key }}
               value: {{ $value }}
             {{- end }}
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: status.podIP
+{{- end }}
           args:
-            - --config.file=/etc/config/{{ .Values.runner.configFileName }}
-            - --storage.path={{ .Values.runner.persistentVolume.mountPath }}
-          {{- range $key, $value := .Values.runner.extraArgs }}
+{{- if .Values.extraArgs }}
+          {{- range $key, $value := .Values.extraArgs }}
             - --{{ $key }}={{ $value }}
           {{- end }}
+{{- end }}
           ports:
             - containerPort: 9093
-            # TO DO
-#          readinessProbe:
-#            httpGet:
-#              path:
-#              port: 9093
-#            initialDelaySeconds: 30
-#            timeoutSeconds: 30
           resources:
-{{ toYaml .Values.runner.resources | indent 12 }}
-          volumeMounts:
-            - name: config-volume
-              mountPath: /etc/config
-            - name: storage-volume
-              mountPath: "{{ .Values.runner.persistentVolume.mountPath }}"
-              subPath: "{{ .Values.runner.persistentVolume.subPath }}"
-          {{- range .Values.runner.extraSecretMounts }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-              subPath: {{ .subPath }}
-              readOnly: {{ .readOnly }}
-          {{- end }}
+{{ toYaml .Values.resources | indent 12 }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
       {{ toYaml .Values.imagePullSecrets | indent 2 }}
     {{- end }}
-    {{- if .Values.runner.nodeSelector }}
+    {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.runner.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.runner.securityContext }}
+    {{- if .Values.securityContext }}
       securityContext:
-{{ toYaml .Values.runner.securityContext | indent 8 }}
+{{ toYaml .Values.securityContext | indent 8 }}
     {{- end }}
-    {{- if .Values.runner.tolerations }}
+    {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.runner.tolerations | indent 8 }}
+{{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.runner.affinity }}
+    {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.runner.affinity | indent 8 }}
+{{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-      volumes:
-        - name: config-volume
-          {{- if empty .Values.runner.configFromSecret }}
-          configMap:
-            name: {{ if .Values.runner.configMapOverrideName }}{{ .Release.Name }}-{{ .Values.runner.configMapOverrideName }}{{- else }}{{ template "runner.fullname" . }}{{- end }}
-          {{- else }}
-          secret:
-            secretName: {{ .Values.runner.configFromSecret }}
-          {{- end }}
-      {{- range .Values.runner.extraSecretMounts }}
+      {{- range .Values.extraSecretMounts }}
         - name: {{ .name }}
           secret:
             secretName: {{ .secretName }}
       {{- end }}
         - name: storage-volume
-        {{- if .Values.runner.persistentVolume.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ if .Values.runner.persistentVolume.existingClaim }}{{ .Values.runner.persistentVolume.existingClaim }}{{- else }}{{ template "runner.fullname" . }}{{- end }}
-        {{- else }}
           emptyDir:
-          {{- if .Values.runner.emptyDir.sizeLimit }}
-            sizeLimit: {{ .Values.runner.emptyDir.sizeLimit }}
+          {{- if .Values.emptyDir.sizeLimit }}
+            sizeLimit: {{ .Values.emptyDir.sizeLimit }}
           {{- else }}
             {}
           {{- end -}}
-        {{- end -}}
-{{- end }}

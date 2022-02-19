@@ -1,6 +1,6 @@
 apiVersion: v2
 name: runner
-version: 1.0.0
+version: 1.0.1
 appVersion: 1.0.0
 description: runner is a mergestat query runner for kubernetes
 home: https://www.mergestat.com/
