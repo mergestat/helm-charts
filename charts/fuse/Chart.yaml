@@ -1,0 +1,16 @@
+apiVersion: v2
+name: runner
+version: 1.0.0
+appVersion: 1.0.0
+description: Fuse syncs data from Git into a SQL database for use in BI/visualization/other tools.
+home: https://www.mergestat.com/
+icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+sources:
+  - https://github.com/mergestat/runner
+maintainers:
+  - name: patrickdevivo
+    email: patrick@mergestat.com
+  - name: matoszz
+    email: manderson@mergestat.com
+engine: gotpl
+type: application
