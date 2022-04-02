@@ -2,17 +2,24 @@ replicaCount: 1
 
 image:
   repository: mergestat/fuse
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+fuse:
+  config:
+    concurrency: 10
+  
+  # secret should have GITHUB_TOKEN and POSTGRES_CONNECTION
+  secretName: ""
+
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
@@ -32,9 +39,9 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
+# service:
+#   type: ClusterIP
+#   port: 80
 
 # ingress:
 #   enabled: false

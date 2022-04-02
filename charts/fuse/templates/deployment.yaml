@@ -44,6 +44,19 @@ spec:
           #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: CONCURRENCY
+              value: {{ .Values.fuse.config.concurrency | default "10" }}
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.fuse.secretName }}
+                  key: GITHUB_TOKEN
+            - name: POSTGRES_CONNECTION
+              valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.fuse.secretName }}
+                    key: POSTGRES_CONNECTION
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
