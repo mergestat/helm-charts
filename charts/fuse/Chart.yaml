@@ -1,7 +1,7 @@
 apiVersion: v2
 name: fuse
-version: 1.0.0
-appVersion: 1.0.0
+version: 1.0.1
+appVersion: 1.0.1
 description: Fuse syncs data from Git into a SQL database for use in BI/visualization/other tools.
 home: https://www.mergestat.com/
 icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
@@ -14,3 +14,8 @@ maintainers:
     email: manderson@mergestat.com
 engine: gotpl
 type: application
+dependencies:
+  - name: postgresql
+    version: ~11.1.24
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
