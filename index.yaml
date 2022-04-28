@@ -2,11 +2,16 @@ apiVersion: v1
 entries:
   fuse:
   - apiVersion: v2
-    appVersion: 1.0.0
-    created: "2022-04-02T21:05:43.088380984Z"
+    appVersion: 1.0.1
+    created: "2022-04-28T13:57:08.588429015Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.1.24
     description: Fuse syncs data from Git into a SQL database for use in BI/visualization/other
       tools.
-    digest: 0d15043df220ad99eb8cd397494ec35bbade862dcc593069c9b5ce681d3f52a3
+    digest: d05f3bb6ac17991f0fe5d48e7f72527dbf897de61751239820811bcbfd695d5e
     home: https://www.mergestat.com/
     icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
     maintainers:
@@ -19,6 +24,6 @@ entries:
     - https://github.com/mergestat/fuse
     type: application
     urls:
-    - https://github.com/mergestat/helm-charts/releases/download/fuse-1.0.0/fuse-1.0.0.tgz
-    version: 1.0.0
+    - https://github.com/mergestat/helm-charts/releases/download/fuse-1.0.1/fuse-1.0.1.tgz
+    version: 1.0.1
 generated: "2022-04-02T17:00:38.59051-04:00"
