@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fuse.fullname" . }}-hasura
+  labels:
+    {{- include "fuse.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "fuse.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "fuse.selectorLabels" . | nindent 8 }}
+        app: hasura-deployment
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "fuse.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-hasura-graphql-engine
+          image: hasura/graphql-engine:v2.5.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: HASURA_GRAPHQL_DATABASE_URL
+              value: postgres://postgres:password@mergestat-fuse-postgresql:5432/postgres
+          ports:
+          - containerPort: 8080

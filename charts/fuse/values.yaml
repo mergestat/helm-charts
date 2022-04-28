@@ -13,6 +13,8 @@ fullnameOverride: ""
 fuse:
   config:
     concurrency: 10
+    GITHUB_TOKEN: "123"
+    POSTGRES_CONNECTION: postgres://postgres:password@mergestat-fuse-postgresql:5432/postgres
   
   # secret should have GITHUB_TOKEN and POSTGRES_CONNECTION
   secretName: ""
@@ -83,3 +85,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+global:
+  postgresql:
+    enabled: false
+    auth:
+      postgresPassword: "password"
+      database: postgres

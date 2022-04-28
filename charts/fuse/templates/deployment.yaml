@@ -27,8 +27,15 @@ spec:
       serviceAccountName: {{ include "fuse.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Chart.Name }}-worker-init
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: ["/init.sh"]
+          env:
+            - name: HASURA_GRAPHQL_ENDPOINT
+              value: http://mergestat-fuse-hasura:8080/
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-worker
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,17 +53,19 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: CONCURRENCY
-              value: {{ .Values.fuse.config.concurrency | default "10" }}
+              value: {{ .Values.fuse.config.concurrency | quote }}
             - name: GITHUB_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.fuse.secretName }}
-                  key: GITHUB_TOKEN
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: {{ .Values.fuse.secretName }}
+              #     key: GITHUB_TOKEN
+              value: {{ .Values.fuse.config.GITHUB_TOKEN | quote }}
             - name: POSTGRES_CONNECTION
-              valueFrom:
-                  secretKeyRef:
-                    name: {{ .Values.fuse.secretName }}
-                    key: POSTGRES_CONNECTION
+              # valueFrom:
+              #     secretKeyRef:
+              #       name: {{ .Values.fuse.secretName }}
+              #       key: POSTGRES_CONNECTION
+              value: {{ .Values.fuse.config.POSTGRES_CONNECTION | quote }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
