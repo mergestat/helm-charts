@@ -34,6 +34,6 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: HASURA_GRAPHQL_DATABASE_URL
-              value: postgres://postgres:password@mergestat-fuse-postgresql:5432/postgres
+              value: postgres://postgres:password@fuse-postgresql:5432/postgres
           ports:
           - containerPort: 8080
