@@ -19,3 +19,8 @@ dependencies:
     version: ~11.1.24
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
