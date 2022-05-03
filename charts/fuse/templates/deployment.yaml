@@ -33,7 +33,7 @@ spec:
           command: ["/init.sh"]
           env:
             - name: HASURA_GRAPHQL_ENDPOINT
-              value: http://mergestat-fuse-hasura:8080/
+              value: http://fuse-hasura:8080/
       containers:
         - name: {{ .Chart.Name }}-worker
           securityContext:
