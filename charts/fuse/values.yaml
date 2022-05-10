@@ -17,8 +17,8 @@ fuse:
   # GITHUB_TOKEN env should be set
   # POSTGRES_CONNECTION may also be overridden
   envFrom:
-    - secretRef: fuse-secret
-      name: some-secret
+    - secretRef:
+        name: fuse-secret
 
 serviceAccount:
   # Specifies whether a service account should be created

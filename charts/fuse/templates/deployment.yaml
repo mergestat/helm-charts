@@ -54,12 +54,10 @@ spec:
           env:
             - name: CONCURRENCY
               value: {{ .Values.fuse.config.concurrency | quote }}
-            - name: GITHUB_TOKEN
-              value: {{ .Values.fuse.config.githubToken | quote }}
             - name: POSTGRES_CONNECTION
               value: postgres://postgres:password@fuse-postgresql:5432/postgres # default if none is supplied, assumes pg is running with default values as well
           {{- if .Values.fuse.envFrom }}
-          envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 10 }}
+          envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 12 }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
