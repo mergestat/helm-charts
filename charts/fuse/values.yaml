@@ -13,11 +13,12 @@ fullnameOverride: ""
 fuse:
   config:
     concurrency: 10
-    GITHUB_TOKEN: "123"
-    POSTGRES_CONNECTION: postgres://postgres:password@fuse-postgresql:5432/postgres
 
-  # secret should have GITHUB_TOKEN and POSTGRES_CONNECTION
-  secretName: ""
+  # GITHUB_TOKEN env should be set
+  # POSTGRES_CONNECTION may also be overridden
+  envFrom:
+    - secretRef:
+        name: fuse-secret
 
 serviceAccount:
   # Specifies whether a service account should be created
