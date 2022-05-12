@@ -34,7 +34,7 @@ spec:
           args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "up"]
           env:
             - name: POSTGRES_CONNECTION
-              value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
+              value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
           {{- if .Values.fuse.envFrom }}
           envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 12 }}
           {{- end }}
@@ -59,7 +59,8 @@ spec:
             - name: CONCURRENCY
               value: {{ .Values.fuse.config.concurrency | quote }}
             - name: POSTGRES_CONNECTION
-              value: postgres://postgres:password@fuse-postgresql:5432/postgres # default if none is supplied, assumes pg is running with default values as well
+              # default if none is supplied, assumes pg is running with default values as well
+              value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
           {{- if .Values.fuse.envFrom }}
           envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 12 }}
           {{- end }}
