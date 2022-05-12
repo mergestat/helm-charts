@@ -30,10 +30,11 @@ spec:
       initContainers:
         - name: {{ .Chart.Name }}-worker-init
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ["/init.sh"]
+          command: [/usr/local/bin/migrate]
+          args: ["-database", "postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable", "-path", "migrations", "up"]
           env:
-            - name: HASURA_GRAPHQL_ENDPOINT
-              value: http://fuse-hasura:8080/
+            - name: POSTGRES_CONNECTION
+              value: postgres://postgres:password@fuse-postgresql:5432/postgres
       containers:
         - name: {{ .Chart.Name }}-worker
           securityContext:
