@@ -1,10 +1,10 @@
 replicaCount: 1
 
 image:
-  repository: mergestat/fuse
+  repository: mergestat/fuse@sha256
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: d38008f16835f5ddd96e6f0195147e6eac9e9b04a7d0e392915ee3d67b08eb2d
 
 imagePullSecrets: []
 nameOverride: ""
@@ -89,7 +89,7 @@ affinity: {}
 
 postgresql:
 # https://github.com/bitnami/charts/tree/master/bitnami/postgresql
-  enabled: false
+  enabled: true
   auth:
     ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
     postgresPassword: ""
