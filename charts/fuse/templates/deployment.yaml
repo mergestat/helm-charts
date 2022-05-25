@@ -35,9 +35,9 @@ spec:
           env:
             - name: POSTGRES_CONNECTION
               value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
-          {{- if .Values.fuse.envFrom }}
-          envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 12 }}
-          {{- end }}
+            {{- if .Values.fuse.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
+            {{- end }}
       containers:
         - name: {{ .Chart.Name }}-worker
           securityContext:
@@ -61,9 +61,9 @@ spec:
             - name: POSTGRES_CONNECTION
               # default if none is supplied, assumes pg is running with default values as well
               value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
-          {{- if .Values.fuse.envFrom }}
-          envFrom: {{- include "common.tplvalues.render" (dict "value" .Values.fuse.envFrom "context" $ ) | nindent 12 }}
-          {{- end }}
+            {{- if .Values.fuse.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
