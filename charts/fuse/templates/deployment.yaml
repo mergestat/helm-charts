@@ -33,8 +33,6 @@ spec:
           command: [/usr/local/bin/migrate]
           args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "up"]
           env:
-            - name: POSTGRES_CONNECTION
-              value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
             {{- if .Values.fuse.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
             {{- end }}
@@ -58,9 +56,6 @@ spec:
           env:
             - name: CONCURRENCY
               value: {{ .Values.fuse.config.concurrency | quote }}
-            - name: POSTGRES_CONNECTION
-              # default if none is supplied, assumes pg is running with default values as well
-              value: postgres://{{ .Values.postgresql.auth.username | default "postgres" }}:{{ .Values.postgresql.auth.postgresPassword }}@fuse-postgresql:5432/{{ .Values.postgresql.auth.database | default "postgres" }}?sslmode=disable
             {{- if .Values.fuse.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
             {{- end }}

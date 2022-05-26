@@ -22,6 +22,8 @@ fuse:
         secretKeyRef:
           name: fuse-secret
           key: GITHUB_TOKEN
+    - name: POSTGRES_CONNECTION
+      value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
 
 serviceAccount:
   # Specifies whether a service account should be created
