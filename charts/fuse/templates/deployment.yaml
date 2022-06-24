@@ -59,6 +59,17 @@ spec:
             {{- if .Values.fuse.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
             {{- end }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: fuse-worker-tmp
+              mountPath: /tmp
+          {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: fuse-worker-tmp
+          persistentVolumeClaim:
+            claimName: {{ include "fuse.fullname" . }}-tmp
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
