@@ -4,7 +4,7 @@ image:
   repository: mergestat/fuse
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: sha-489b0e6
+  # tag: sha-bf949ea
 
 imagePullSecrets: []
 nameOverride: ""
