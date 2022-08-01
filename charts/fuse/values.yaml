@@ -11,9 +11,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 fuse:
-  config:
-    concurrency: 10
-
   # GITHUB_TOKEN env should be set
   # POSTGRES_CONNECTION may also be overridden
   env:

@@ -54,8 +54,6 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-            - name: CONCURRENCY
-              value: {{ .Values.fuse.config.concurrency | quote }}
             {{- if .Values.fuse.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
             {{- end }}
