@@ -21,6 +21,8 @@ fuse:
           key: GITHUB_TOKEN
     - name: POSTGRES_CONNECTION
       value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
+    - name: CONCURRENCY
+      value: "1"
 
 serviceAccount:
   # Specifies whether a service account should be created
