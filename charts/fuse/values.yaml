@@ -1,28 +1,64 @@
-replicaCount: 1
-
-image:
-  repository: mergestat/fuse
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  # tag: sha-bf949ea
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-fuse:
-  # GITHUB_TOKEN env should be set
-  # POSTGRES_CONNECTION may also be overridden
+worker:
+  replicaCount: 1
+  image:
+    repository: mergestat/fuse
+    pullPolicy: Always
+    # tag: sha-1234567
   env:
-    - name: GITHUB_TOKEN
-      valueFrom:
-        secretKeyRef:
-          name: fuse-secret
-          key: GITHUB_TOKEN
     - name: POSTGRES_CONNECTION
       value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
     - name: CONCURRENCY
       value: "1"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+  persistence:
+    enabled: false
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 20Gi
+
+graphql:
+  replicaCount: 1
+  image:
+    repository: mergestat/fuse-graphql
+    pullPolicy: Always
+    # tag: sha-1234567
+  env:
+    - name: POSTGRES_CONNECTION
+      value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+
+ui:
+  replicaCount: 1
+  image:
+    repository: mergestat/fuse-ui
+    pullPolicy: Always
+    # tag: sha-1234567
+  env:
+    - name: POSTGRAPHILE_API
+      value: http://fuse-graphql:5433/graphql
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+  securityContext: {}
+  podSecurityContext: {}
+  podAnnotations: {}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -32,64 +68,6 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-# service:
-#   type: ClusterIP
-#   port: 80
-
-# ingress:
-#   enabled: false
-#   className: ""
-#   annotations: {}
-#     # kubernetes.io/ingress.class: nginx
-#     # kubernetes.io/tls-acme: "true"
-#   hosts:
-#     - host: chart-example.local
-#       paths:
-#         - path: /
-#           pathType: ImplementationSpecific
-#   tls: []
-#   #  - secretName: chart-example-tls
-#   #    hosts:
-#   #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
 
 postgresql:
 # https://github.com/bitnami/charts/tree/master/bitnami/postgresql
@@ -107,9 +85,3 @@ postgresql:
     existingSecret: ""
     ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user), `password` (which is the password for the custom user to create when `auth.username` is set) and `replication-password` (which is the password for replication user). `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
     ## The value is evaluated as a template.
-
-persistence:
-  enabled: false
-  # storageCLass: "-"
-  accessMode: ReadWriteOnce
-  size: 20Gi

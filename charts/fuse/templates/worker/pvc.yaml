@@ -1,0 +1,17 @@
+{{- if .Values.worker.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "fuse.fullname" . }}-worker-tmp
+  labels:
+    {{- include "fuse.labels" . | nindent 4 }}
+spec:
+{{- if .Values.worker.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+{{- end }}
+  accessModes:
+    - {{ .Values.worker.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.worker.persistence.size }}
+{{- end }}
