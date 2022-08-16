@@ -1,19 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fuse.fullname" . }}
+  name: {{ include "fuse.fullname" . }}-worker
   labels:
     {{- include "fuse.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.worker.replicaCount | default 1 }}
   selector:
     matchLabels:
       {{- include "fuse.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.worker.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -26,22 +24,22 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "fuse.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
       initContainers:
         - name: {{ .Chart.Name }}-worker-init
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           command: [/usr/local/bin/migrate]
           args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "up"]
           env:
-            {{- if .Values.fuse.env }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
+            {{- if .Values.worker.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
             {{- end }}
       containers:
         - name: {{ .Chart.Name }}-worker
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml .Values.worker.securityContext | nindent 12 }}
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
           # TODO(patrickdevivo) implement health checks in worker
           # livenessProbe:
           #   httpGet:
@@ -52,31 +50,31 @@ spec:
           #     path: /
           #     port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.worker.resources | nindent 12 }}
           env:
-            {{- if .Values.fuse.env }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.fuse.env "context" $ ) | nindent 12 }}
+            {{- if .Values.worker.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
             {{- end }}
-          {{- if .Values.persistence.enabled }}
+          {{- if .Values.worker.persistence.enabled }}
           volumeMounts:
             - name: fuse-worker-tmp
               mountPath: /tmp
           {{- end }}
-      {{- if .Values.persistence.enabled }}
+      {{- if .Values.worker.persistence.enabled }}
       volumes:
         - name: fuse-worker-tmp
           persistentVolumeClaim:
-            claimName: {{ include "fuse.fullname" . }}-tmp
+            claimName: {{ include "fuse.fullname" . }}-worker-tmp
       {{- end }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.worker.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.worker.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
