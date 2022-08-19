@@ -3,4 +3,5 @@
 # https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
 # https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
 
-/charts/runner @matoszz @patrickdevivo
+/charts/runner @mergestat/core-maintainers
+/charts/fuse @mergestat/core-maintainers
