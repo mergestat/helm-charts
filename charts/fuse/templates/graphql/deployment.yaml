@@ -55,7 +55,7 @@ spec:
             - "--schema"
             - "mergestat,public"
             - "--append-plugins"
-            - "@graphile-contrib/pg-simplify-inflector,/graphql/exec-sql/index.js"
+            - "@graphile-contrib/pg-simplify-inflector,postgraphile-plugin-connection-filter,/graphql/exec-sql/index.js"
             - "-o"
             - "--subscriptions"
             - "--retry-on-init-fail"
