@@ -4,6 +4,7 @@ metadata:
   name: {{ include "fuse.fullname" . }}-graphql
   labels:
     {{- include "fuse.labels" . | nindent 4 }}
+    fuse-component: graphql
 spec:
   replicas: {{ .Values.graphql.replicaCount | default 1 }}
   selector:

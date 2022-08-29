@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "fuse.selectorLabels" . | nindent 6 }}
+      fuse-component: worker
   template:
     metadata:
       {{- with .Values.worker.podAnnotations }}
@@ -17,6 +18,7 @@ spec:
       {{- end }}
       labels:
         {{- include "fuse.selectorLabels" . | nindent 8 }}
+        fuse-component: worker
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
