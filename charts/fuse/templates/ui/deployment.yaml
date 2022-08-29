@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "fuse.selectorLabels" . | nindent 6 }}
+      fuse-component: ui
   template:
     metadata:
       {{- with .Values.ui.podAnnotations }}
@@ -17,7 +18,7 @@ spec:
       {{- end }}
       labels:
         {{- include "fuse.selectorLabels" . | nindent 8 }}
-        deployment: ui
+        fuse-component: ui
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.ui.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-graphql
+        - name: {{ .Chart.Name }}-ui
           securityContext:
             {{- toYaml .Values.ui.securityContext | nindent 12 }}
           image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
