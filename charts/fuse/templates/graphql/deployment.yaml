@@ -4,12 +4,12 @@ metadata:
   name: {{ include "fuse.fullname" . }}-graphql
   labels:
     {{- include "fuse.labels" . | nindent 4 }}
-    fuse-component: graphql
 spec:
   replicas: {{ .Values.graphql.replicaCount | default 1 }}
   selector:
     matchLabels:
       {{- include "fuse.selectorLabels" . | nindent 6 }}
+      fuse-component: graphql
   template:
     metadata:
       {{- with .Values.graphql.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
       {{- end }}
       labels:
         {{- include "fuse.selectorLabels" . | nindent 8 }}
-        deployment: graphql
+        fuse-component: graphql
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

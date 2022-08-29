@@ -1,6 +1,6 @@
 apiVersion: v2
 name: fuse
-version: 1.2.4
+version: 1.2.5
 appVersion: sha-c0dc5ab
 description: Fuse syncs data from Git into a SQL database for use in BI/visualization/other tools.
 home: https://www.mergestat.com/
