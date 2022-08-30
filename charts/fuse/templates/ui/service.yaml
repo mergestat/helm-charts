@@ -4,7 +4,7 @@ metadata:
   name: {{ include "fuse.fullname" . }}-ui
 spec:
   selector:
-    deployment: ui
+    fuse-component: ui
   ports:
     - protocol: TCP
       port: 3000
