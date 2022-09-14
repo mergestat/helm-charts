@@ -18,6 +18,9 @@ worker:
   podAnnotations: {}
   persistence:
     enabled: false
+    annotations: {}
+      ## Example usage for github.com/topolvm/pvc-autoresizer
+      # resize.topolvm.io/storage_limit: 2Ti
     # storageClass: "-"
     accessMode: ReadWriteOnce
     size: 20Gi
