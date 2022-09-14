@@ -5,7 +5,7 @@ metadata:
   name: {{ include "fuse.fullname" . }}-worker-tmp
   {{- with .Values.worker.persistence.annotations }}
   annotations:
-    {{- . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     {{- include "fuse.labels" . | nindent 4 }}
