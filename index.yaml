@@ -3,6 +3,36 @@ entries:
   fuse:
   - apiVersion: v2
     appVersion: 0.0.8
+    created: "2022-09-29T15:43:49.784978231Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.0
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: Fuse syncs data from Git into a SQL database for use in BI/visualization/other
+      tools.
+    digest: bb20403b6a4fe80d2aa0853b183df60c462acd1e19177791ab371074b68f95d1
+    home: https://www.mergestat.com/
+    icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+    maintainers:
+    - email: patrick@mergestat.com
+      name: patrickdevivo
+    - email: manderson@mergestat.com
+      name: matoszz
+    name: fuse
+    sources:
+    - https://github.com/mergestat/fuse
+    type: application
+    urls:
+    - https://github.com/mergestat/helm-charts/releases/download/fuse-1.2.22/fuse-1.2.22.tgz
+    version: 1.2.22
+  - apiVersion: v2
+    appVersion: 0.0.8
     created: "2022-09-29T15:39:26.781312508Z"
     dependencies:
     - condition: postgresql.enabled
@@ -1096,4 +1126,4 @@ entries:
     urls:
     - https://github.com/mergestat/helm-charts/releases/download/fuse-1.0.1/fuse-1.0.1.tgz
     version: 1.0.1
-generated: "2022-09-29T15:39:26.781890311Z"
+generated: "2022-09-29T15:43:49.785859221Z"
