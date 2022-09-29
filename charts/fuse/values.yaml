@@ -58,6 +58,8 @@ ui:
   securityContext: {}
   podSecurityContext: {}
   podAnnotations: {}
+  service:
+    type: ClusterIP
 
 imagePullSecrets: []
 nameOverride: ""
