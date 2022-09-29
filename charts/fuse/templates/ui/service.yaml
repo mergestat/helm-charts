@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: {{ include "fuse.fullname" . }}-ui
 spec:
+  type: {{ .Values.ui.service.type | default "ClusterIP" }}
   selector:
     fuse-component: ui
   ports:
