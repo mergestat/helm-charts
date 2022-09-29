@@ -60,6 +60,7 @@ ui:
   podAnnotations: {}
   service:
     type: ClusterIP
+    annotations: {}
 
 imagePullSecrets: []
 nameOverride: ""
