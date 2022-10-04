@@ -68,6 +68,9 @@ spec:
             - "--enable-query-batching"
             - "--disable-query-log"
             - "--legacy-relations=omit"
+            - "--jwt-secret"
+            - "$(JWT_SECRET)"
+            - "--default-role=mergestat_anonymous"
       {{- with .Values.graphql.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
