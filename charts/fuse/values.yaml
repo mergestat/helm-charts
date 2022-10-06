@@ -3,12 +3,13 @@ worker:
   image:
     repository: mergestat/fuse
     pullPolicy: Always
-    # tag: sha-1234567
   env:
     - name: POSTGRES_CONNECTION
       value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
     - name: CONCURRENCY
-      value: "1"
+      value: "3"
+    - name: FUSE_SECRET
+      value: some-secret-string
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -30,10 +31,11 @@ graphql:
   image:
     repository: mergestat/fuse-graphql
     pullPolicy: Always
-    # tag: sha-1234567
   env:
     - name: POSTGRES_CONNECTION
       value: postgres://postgres:password@fuse-postgresql:5432/postgres?sslmode=disable
+    - name: JWT_SECRET
+      value: some-secret-string
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -47,10 +49,11 @@ ui:
   image:
     repository: mergestat/fuse-ui
     pullPolicy: Always
-    # tag: sha-1234567
   env:
     - name: POSTGRAPHILE_API
       value: http://fuse-graphql:5433/graphql
+    - name: JWT_SECRET
+      value: some-secret-string
   nodeSelector: {}
   tolerations: []
   affinity: {}
