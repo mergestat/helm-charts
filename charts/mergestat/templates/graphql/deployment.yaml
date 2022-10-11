@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mergestat.fullname" . }}-graphql
+  labels:
+    {{- include "mergestat.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.graphql.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "mergestat.selectorLabels" . | nindent 6 }}
+      mergestat-component: graphql
+  template:
+    metadata:
+      {{- with .Values.graphql.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mergestat.selectorLabels" . | nindent 8 }}
+        mergestat-component: graphql
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mergestat.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.graphql.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-graphql
+          securityContext:
+            {{- toYaml .Values.graphql.securityContext | nindent 12 }}
+          image: "{{ .Values.graphql.image.repository }}:{{ .Values.graphql.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.graphql.image.pullPolicy }}
+          # TODO(patrickdevivo) implement health checks
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.graphql.resources | nindent 12 }}
+          env:
+            {{- if .Values.graphql.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.graphql.env "context" $ ) | nindent 12 }}
+            {{- end }}
+          args:
+            - "--connection"
+            - "$(POSTGRES_CONNECTION)"
+            - "--port"
+            - "5433"
+            - "--schema"
+            - "mergestat,public"
+            - "--append-plugins"
+            - "@graphile-contrib/pg-simplify-inflector,postgraphile-plugin-connection-filter,/graphql/exec-sql/index.js,/graphql/service-credentials/index.js"
+            - "-o"
+            - "--subscriptions"
+            - "--retry-on-init-fail"
+            - "--dynamic-json"
+            - "--no-setof-functions-contain-nulls"
+            - "--no-ignore-rbac"
+            - "--extended-errors=errcode"
+            - "--disable-graphiql"
+            - "--enable-query-batching"
+            - "--disable-query-log"
+            - "--legacy-relations=omit"
+            - "--jwt-secret"
+            - "$(JWT_SECRET)"
+            - "--default-role=mergestat_anonymous"
+      {{- with .Values.graphql.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.graphql.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.graphql.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

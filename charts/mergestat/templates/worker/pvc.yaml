@@ -1,0 +1,21 @@
+{{- if .Values.worker.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "mergestat.fullname" . }}-worker-tmp
+  {{- with .Values.worker.persistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "mergestat.labels" . | nindent 4 }}
+spec:
+{{- if .Values.worker.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+{{- end }}
+  accessModes:
+    - {{ .Values.worker.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.worker.persistence.size }}
+{{- end }}
