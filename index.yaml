@@ -1276,4 +1276,33 @@ entries:
     urls:
     - https://github.com/mergestat/helm-charts/releases/download/fuse-1.0.1/fuse-1.0.1.tgz
     version: 1.0.1
-generated: "2022-10-05T00:01:47.68099978Z"
+  mergestat:
+  - apiVersion: v2
+    appVersion: 1.0.0-beta
+    created: "2022-10-13T16:40:45.946620167Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.0
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: MergeStat syncs data from Git into a SQL database for use in BI/visualization/other
+      tools.
+    digest: f8d1a4348db5ae057d4a2b42c421cfbf43c6ae9bc9432d48a93171a40a19e104
+    home: https://www.mergestat.com/
+    icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+    maintainers:
+    - email: patrick@mergestat.com
+      name: patrickdevivo
+    name: mergestat
+    sources:
+    - https://github.com/mergestat/mergestat
+    type: application
+    urls:
+    - https://github.com/mergestat/helm-charts/releases/download/mergestat-1.0.0/mergestat-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-10-13T16:40:45.946798782Z"
