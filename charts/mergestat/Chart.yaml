@@ -1,0 +1,24 @@
+apiVersion: v2
+name: mergestat
+version: 1.0.0
+appVersion: 1.0.0-beta
+description: MergeStat syncs data from Git into a SQL database for use in BI/visualization/other tools.
+home: https://www.mergestat.com/
+icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+sources:
+  - https://github.com/mergestat/mergestat
+maintainers:
+  - name: patrickdevivo
+    email: patrick@mergestat.com
+engine: gotpl
+type: application
+dependencies:
+  - name: postgresql
+    version: ~11.9.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x

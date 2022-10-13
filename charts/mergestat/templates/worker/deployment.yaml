@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mergestat.fullname" . }}-worker
+  labels:
+    {{- include "mergestat.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "mergestat.selectorLabels" . | nindent 6 }}
+      mergestat-component: worker
+  template:
+    metadata:
+      {{- with .Values.worker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mergestat.selectorLabels" . | nindent 8 }}
+        mergestat-component: worker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mergestat.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Chart.Name }}-worker-init
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+          command: [/usr/local/bin/migrate]
+          args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "up"]
+          env:
+            {{- if .Values.worker.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
+            {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          securityContext:
+            {{- toYaml .Values.worker.securityContext | nindent 12 }}
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          # TODO(patrickdevivo) implement health checks in worker
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+          env:
+            {{- if .Values.worker.env }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
+            {{- end }}
+          {{- if .Values.worker.persistence.enabled }}
+          volumeMounts:
+            - name: mergestat-worker-tmp
+              mountPath: /tmp
+          {{- end }}
+      {{- if .Values.worker.persistence.enabled }}
+      volumes:
+        - name: mergestat-worker-tmp
+          persistentVolumeClaim:
+            claimName: {{ include "mergestat.fullname" . }}-worker-tmp
+      {{- end }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
