@@ -4,7 +4,7 @@ metadata:
   name: {{ include "mergestat.fullname" . }}-ui
    {{- with .Values.ui.service.annotations }}
     annotations:
-      {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
     {{- end }}
 spec:
   type: {{ .Values.ui.service.type | default "ClusterIP" }}
