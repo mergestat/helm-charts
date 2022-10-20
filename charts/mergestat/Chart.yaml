@@ -1,6 +1,6 @@
 apiVersion: v2
 name: mergestat
-version: 1.1.0
+version: 1.1.1
 appVersion: 1.1.0-beta
 description: MergeStat syncs data from Git into a SQL database for use in BI/visualization/other tools.
 home: https://www.mergestat.com/
