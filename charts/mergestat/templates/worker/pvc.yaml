@@ -11,7 +11,7 @@ metadata:
     {{- include "mergestat.labels" . | nindent 4 }}
 spec:
 {{- if .Values.worker.persistence.storageClass }}
-  storageClassName: {{ .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.worker.persistence.storageClass }}
 {{- end }}
   accessModes:
     - {{ .Values.worker.persistence.accessMode }}
