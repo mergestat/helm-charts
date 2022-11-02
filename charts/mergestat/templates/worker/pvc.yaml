@@ -1,21 +1,21 @@
-{{- if .Values.worker.persistence.enabled }}
+{{- if .Values.worker.pvc.enabled }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ include "mergestat.fullname" . }}-worker-tmp
-  {{- with .Values.worker.persistence.annotations }}
+  name: {{ include "mergestat.fullname" . }}-worker-pvc
+  {{- with .Values.worker.pvc.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     {{- include "mergestat.labels" . | nindent 4 }}
 spec:
-{{- if .Values.worker.persistence.storageClass }}
-  storageClassName: {{ .Values.worker.persistence.storageClass }}
+{{- if .Values.worker.pvc.storageClass }}
+  storageClassName: {{ .Values.worker.pvc.storageClass }}
 {{- end }}
   accessModes:
-    - {{ .Values.worker.persistence.accessMode }}
+    - {{ .Values.worker.pvc.accessMode }}
   resources:
     requests:
-      storage: {{ .Values.worker.persistence.size }}
+      storage: {{ .Values.worker.pvc.size }}
 {{- end }}

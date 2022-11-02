@@ -17,7 +17,9 @@ worker:
   securityContext: {}
   podSecurityContext: {}
   podAnnotations: {}
-  persistence:
+  volumeMounts: []
+  volumes: []
+  pvc:
     enabled: false
     annotations: {}
       ## Example usage for github.com/topolvm/pvc-autoresizer
