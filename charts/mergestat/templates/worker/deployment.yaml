@@ -57,7 +57,7 @@ spec:
             {{- if .Values.worker.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
             {{- end }}
-          {{- with .Values.worker.volumes }}
+          {{- with .Values.worker.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
