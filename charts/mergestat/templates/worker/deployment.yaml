@@ -57,16 +57,13 @@ spec:
             {{- if .Values.worker.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
             {{- end }}
-          {{- if .Values.worker.persistence.enabled }}
+          {{- with .Values.worker.volumes }}
           volumeMounts:
-            - name: mergestat-worker-tmp
-              mountPath: /tmp
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- if .Values.worker.persistence.enabled }}
+      {{- with .Values.worker.volumes }}
       volumes:
-        - name: mergestat-worker-tmp
-          persistentVolumeClaim:
-            claimName: {{ include "mergestat.fullname" . }}-worker-tmp
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
