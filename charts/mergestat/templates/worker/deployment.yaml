@@ -31,7 +31,7 @@ spec:
         - name: {{ .Chart.Name }}-worker-init
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           command: [/usr/local/bin/migrate]
-          args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "up", "-lock-timeout=300"]
+          args: ["-database", "$(POSTGRES_CONNECTION)", "-path", "migrations", "-lock-timeout=300", "up"]
           env:
             {{- if .Values.worker.env }}
             {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
