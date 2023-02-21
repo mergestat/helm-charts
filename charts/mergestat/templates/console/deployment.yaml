@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "mergestat.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.ui.replicaCount | default 1 }}
+  replicas: {{ .Values.ui.replicaCount }}
   selector:
     matchLabels:
       {{- include "mergestat.selectorLabels" . | nindent 6 }}
