@@ -54,6 +54,8 @@ ui:
   env:
     - name: POSTGRAPHILE_API
       value: http://mergestat-graphql:5433/graphql
+    - name: POSTGRES_CONNECTION
+      value: postgres://postgres:password@mergestat-postgresql:5432/postgres?sslmode=disable
     - name: JWT_SECRET
       value: some-secret-string
   nodeSelector: {}
