@@ -1278,6 +1278,34 @@ entries:
     version: 1.0.1
   mergestat:
   - apiVersion: v2
+    appVersion: 1.21.0-beta
+    created: "2023-03-09T00:59:11.304029686Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ~11.9.0
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: MergeStat syncs data from Git into a SQL database for use in BI/visualization/other
+      tools.
+    digest: a85b2112f310fdfcaf3126bd4d9236bd7dfdd1af75ff0379c76e2f6b859db758
+    home: https://www.mergestat.com/
+    icon: https://github.com/mergestat/mergestat/blob/main/docs/logo.png
+    maintainers:
+    - email: patrick@mergestat.com
+      name: patrickdevivo
+    name: mergestat
+    sources:
+    - https://github.com/mergestat/mergestat
+    type: application
+    urls:
+    - https://github.com/mergestat/helm-charts/releases/download/mergestat-1.21.0/mergestat-1.21.0.tgz
+    version: 1.21.0
+  - apiVersion: v2
     appVersion: 1.20.0-beta
     created: "2023-02-28T16:45:31.169489195Z"
     dependencies:
@@ -2397,4 +2425,4 @@ entries:
     urls:
     - https://github.com/mergestat/helm-charts/releases/download/mergestat-1.0.0/mergestat-1.0.0.tgz
     version: 1.0.0
-generated: "2023-02-28T16:45:31.170020698Z"
+generated: "2023-03-09T00:59:11.304528593Z"
