@@ -14,7 +14,8 @@ worker:
   tolerations: []
   affinity: {}
   resources: {}
-  securityContext: {}
+  securityContext:
+    fsGroup: 1002
   podSecurityContext: {}
   podAnnotations: {}
   volumeMounts: []
