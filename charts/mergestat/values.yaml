@@ -10,6 +10,7 @@ worker:
       value: "3"
     - name: ENCRYPTION_SECRET
       value: some-secret-string
+  annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
