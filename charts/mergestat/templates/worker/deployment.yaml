@@ -6,7 +6,7 @@ metadata:
     {{- include "mergestat.labels" . | nindent 4 }}
   {{- with .Values.worker.annotations }}
   annotations:
-    {{- toYaml . | indent 4}}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   replicas: {{ .Values.worker.replicaCount }}
