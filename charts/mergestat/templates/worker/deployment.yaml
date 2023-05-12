@@ -4,6 +4,10 @@ metadata:
   name: {{ include "mergestat.fullname" . }}-worker
   labels:
     {{- include "mergestat.labels" . | nindent 4 }}
+  {{- with .Values.worker.annotations }}
+  annotations:
+    {{- toYaml . | indent 4}}
+  {{- end }}
 spec:
   replicas: {{ .Values.worker.replicaCount }}
   strategy:
