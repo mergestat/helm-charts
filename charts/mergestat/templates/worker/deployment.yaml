@@ -6,6 +6,8 @@ metadata:
     {{- include "mergestat.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.worker.replicaCount }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "mergestat.selectorLabels" . | nindent 6 }}
