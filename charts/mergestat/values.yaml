@@ -15,7 +15,8 @@ worker:
   tolerations: []
   affinity: {}
   resources: {}
-  securityContext: {}
+  securityContext:
+    privileged: true
   podSecurityContext: {}
   podAnnotations: {}
   volumeMounts: []
@@ -38,6 +39,8 @@ graphql:
     - name: POSTGRES_CONNECTION
       value: postgres://postgres:password@mergestat-postgresql:5432/postgres?sslmode=disable
     - name: JWT_SECRET
+      value: some-secret-string
+    - name: ENCRYPTION_SECRET
       value: some-secret-string
   nodeSelector: {}
   tolerations: []
