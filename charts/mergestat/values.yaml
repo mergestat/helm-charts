@@ -39,6 +39,8 @@ graphql:
       value: postgres://postgres:password@mergestat-postgresql:5432/postgres?sslmode=disable
     - name: JWT_SECRET
       value: some-secret-string
+    - name: ENCRYPTION_SECRET
+      value: some-secret-string
   nodeSelector: {}
   tolerations: []
   affinity: {}

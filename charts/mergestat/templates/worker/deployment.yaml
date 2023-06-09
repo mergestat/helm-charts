@@ -55,6 +55,8 @@ spec:
             {{- include "common.tplvalues.render" (dict "value" .Values.worker.env "context" $ ) | nindent 12 }}
             {{- end }}
           {{- with .Values.worker.volumeMounts }}
+          securityContext:
+            privileged: true
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
