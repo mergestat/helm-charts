@@ -14,7 +14,7 @@ engine: gotpl
 type: application
 dependencies:
   - name: postgresql
-    version: ~11.9.0
+    version: ~13.4.0
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: common
